@@ -1,0 +1,5 @@
+@model IEnumerable<EMS.Models.Salary>
+@{ ViewData["Title"]="My Salary"; }
+<h2 class="mb-1">My Salary</h2><p class="text-muted mb-4">Only approved salary records are shown.</p>
+<div class="row g-3">@foreach(var s in Model){<div class="col-md-6 col-xl-4"><div class="card shadow-sm h-100"><div class="card-body"><div class="d-flex justify-content-between"><h5>@s.Month</h5><span class="badge bg-success">Approved</span></div><h3 class="mt-3">₹@s.NetSalary.ToString("N2")</h3><hr/><div class="small text-muted">Basic: ₹@s.BasicSalary.ToString("N2")</div><div class="small text-muted">Allowances: ₹@s.Allowances.ToString("N2")</div><div class="small text-muted">Deductions: ₹@s.Deductions.ToString("N2")</div></div></div></div>}</div>
+@if(!Model.Any()){<div class="alert alert-info mt-3">No approved salary records available yet.</div>}

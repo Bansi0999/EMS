@@ -1,0 +1,35 @@
+@model EMS.Models.Employee
+@{
+    ViewData["Title"] = "Employee Dashboard";
+    var salary = ViewBag.ApprovedSalary as EMS.Models.Salary;
+    var level = ViewBag.CurrentLevel as EMS.Models.EmployeeLevel;
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+    <div><h2 class="mb-1">Welcome, @Model.FirstName!</h2><p class="text-muted mb-0">Here is your personal employee overview.</p></div>
+    <span class="badge-status badge-active"><i class="bi bi-person-check me-1"></i>Active Employee</span>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-xl-3 col-md-6"><div class="stat-card"><div class="stat-icon bg-teal"><i class="bi bi-bar-chart-steps"></i></div><div><div class="stat-value" style="font-size:18px;">@(level?.Level?.LevelName ?? "Not assigned")</div><div class="stat-label">Current Level</div></div></div></div>
+    <div class="col-xl-3 col-md-6"><div class="stat-card"><div class="stat-icon bg-green"><i class="bi bi-cash-stack"></i></div><div><div class="stat-value" style="font-size:21px;">@(salary != null ? "₹" + salary.NetSalary.ToString("N0") : "—")</div><div class="stat-label">Latest Salary</div></div></div></div>
+    <div class="col-xl-3 col-md-6"><div class="stat-card"><div class="stat-icon bg-amber"><i class="bi bi-hourglass-split"></i></div><div><div class="stat-value">@ViewBag.PendingLeaves</div><div class="stat-label">Pending Leaves</div></div></div></div>
+    <div class="col-xl-3 col-md-6"><div class="stat-card"><div class="stat-icon bg-blue"><i class="bi bi-check2-circle"></i></div><div><div class="stat-value">@ViewBag.ApprovedLeaves</div><div class="stat-label">Approved Leaves</div></div></div></div>
+</div>
+
+<div class="content-card mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3"><div><h5 class="section-title mb-1">My Employment Profile</h5><p class="text-muted small mb-0">Current information maintained by the administrator.</p></div><span class="badge-dept">@Model.EmployeeCode</span></div>
+    <div class="row g-3">
+        <div class="col-md-3"><div class="small text-muted">Department</div><strong>@Model.Department?.DepartmentName</strong></div>
+        <div class="col-md-3"><div class="small text-muted">Designation</div><strong>@Model.Designation?.Title</strong></div>
+        <div class="col-md-3"><div class="small text-muted">Email</div><strong class="text-break">@Model.Email</strong></div>
+        <div class="col-md-3"><div class="small text-muted">Hire Date</div><strong>@Model.HireDate.ToString("dd MMM yyyy")</strong></div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-3"><a asp-controller="Leave" asp-action="Apply" class="text-decoration-none"><div class="card shadow-sm h-100"><div class="card-body"><i class="bi bi-calendar-plus fs-2"></i><h5 class="mt-3">Apply Leave</h5><p class="text-muted mb-0">Submit a leave request for approval.</p></div></div></a></div>
+    <div class="col-md-3"><a asp-controller="Leave" asp-action="MyLeaves" class="text-decoration-none"><div class="card shadow-sm h-100"><div class="card-body"><i class="bi bi-calendar-check fs-2"></i><h5 class="mt-3">My Leaves</h5><p class="text-muted mb-0">Track approved and pending leaves.</p></div></div></a></div>
+    <div class="col-md-3"><a asp-controller="Salary" asp-action="MySalary" class="text-decoration-none"><div class="card shadow-sm h-100"><div class="card-body"><i class="bi bi-cash-stack fs-2"></i><h5 class="mt-3">My Salary</h5><p class="text-muted mb-0">View approved salary records.</p></div></div></a></div>
+    <div class="col-md-3"><a asp-controller="Level" asp-action="MyLevel" class="text-decoration-none"><div class="card shadow-sm h-100"><div class="card-body"><i class="bi bi-bar-chart-steps fs-2"></i><h5 class="mt-3">My Level</h5><p class="text-muted mb-0">View or request your level.</p></div></div></a></div>
+</div>

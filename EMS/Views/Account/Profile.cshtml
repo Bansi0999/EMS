@@ -1,0 +1,51 @@
+@model EMS.Models.ProfileViewModel
+@{ ViewData["Title"] = "My Profile"; }
+<div class="row justify-content-center">
+    <div class="col-xl-10 col-lg-11">
+        <div class="content-card">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    @if (!string.IsNullOrWhiteSpace(Model.PhotoPath))
+                    {
+                        <img src="@Model.PhotoPath" alt="Employee profile picture" class="rounded-circle border shadow-sm" style="width:104px;height:104px;object-fit:cover" />
+                    }
+                    else
+                    {
+                        <div class="rounded-circle d-flex align-items-center justify-content-center text-white shadow-sm" style="width:104px;height:104px;background:#0f9488;font-size:2.2rem;font-weight:600">
+                            @(string.IsNullOrWhiteSpace(Model.FullName) ? "E" : Model.FullName.Substring(0, 1).ToUpperInvariant())
+                        </div>
+                    }
+                    <div>
+                        <h3 class="mb-1">@Model.FullName</h3>
+                        <div class="text-muted">Employee ID: @Model.EmployeeCode</div>
+                        <div class="small text-muted">@Model.DesignationTitle · @Model.DepartmentName</div>
+                        <div class="small text-success mt-1"><i class="bi bi-patch-check-fill me-1"></i>Employee Profile</div>
+                    </div>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <a asp-controller="Account" asp-action="EditProfile" class="btn btn-primary"><i class="bi bi-pencil-square me-1"></i>Edit Profile</a>
+                    <a asp-controller="Account" asp-action="ChangePassword" class="btn btn-outline-primary"><i class="bi bi-shield-lock me-1"></i>Change Password</a>
+                    <a asp-controller="Home" asp-action="EmployeeDashboard" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>Back to Dashboard</a>
+                </div>
+            </div>
+            <hr />
+            <h5 class="mb-3"><i class="bi bi-person-lines-fill me-2"></i>Personal Information</h5>
+            <div class="row g-3">
+                <div class="col-md-6"><div class="border rounded p-3 h-100"><div class="text-muted small mb-1">Full Name</div><div class="fw-semibold">@Model.FullName</div></div></div>
+                <div class="col-md-6"><div class="border rounded p-3 h-100"><div class="text-muted small mb-1">Email Address</div><div class="fw-semibold">@(string.IsNullOrWhiteSpace(Model.Email) ? "Not provided" : Model.Email)</div></div></div>
+                <div class="col-md-6"><div class="border rounded p-3 h-100"><div class="text-muted small mb-1">Phone Number</div><div class="fw-semibold">@(string.IsNullOrWhiteSpace(Model.Phone) ? "Not provided" : Model.Phone)</div></div></div>
+                <div class="col-md-6"><div class="border rounded p-3 h-100"><div class="text-muted small mb-1">Gender</div><div class="fw-semibold">@(string.IsNullOrWhiteSpace(Model.Gender) ? "Not provided" : Model.Gender)</div></div></div>
+                <div class="col-md-6"><div class="border rounded p-3 h-100"><div class="text-muted small mb-1">Date of Birth</div><div class="fw-semibold">@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("dd MMM yyyy") : "Not provided")</div></div></div>
+                <div class="col-md-6"><div class="border rounded p-3 h-100"><div class="text-muted small mb-1">Address</div><div class="fw-semibold">@(string.IsNullOrWhiteSpace(Model.Address) ? "Not provided" : Model.Address)</div></div></div>
+            </div>
+            <h5 class="mt-4 mb-3"><i class="bi bi-briefcase me-2"></i>Employment Information</h5>
+            <div class="row g-3">
+                <div class="col-md-6"><div class="border rounded p-3 h-100"><div class="text-muted small mb-1">Employee Code</div><div class="fw-semibold">@Model.EmployeeCode</div></div></div>
+                <div class="col-md-6"><div class="border rounded p-3 h-100"><div class="text-muted small mb-1">Department</div><div class="fw-semibold">@Model.DepartmentName</div></div></div>
+                <div class="col-md-6"><div class="border rounded p-3 h-100"><div class="text-muted small mb-1">Designation</div><div class="fw-semibold">@Model.DesignationTitle</div></div></div>
+                <div class="col-md-6"><div class="border rounded p-3 h-100"><div class="text-muted small mb-1">Hire Date</div><div class="fw-semibold">@(Model.HireDate.HasValue ? Model.HireDate.Value.ToString("dd MMM yyyy") : "Not provided")</div></div></div>
+            </div>
+            <div class="alert alert-light border mt-4 mb-0"><i class="bi bi-info-circle me-2"></i>Use <strong>Edit Profile</strong> to update your name, email, phone number or profile picture. Use <strong>Change Password</strong> to update your login password.</div>
+        </div>
+    </div>
+</div>

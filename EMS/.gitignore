@@ -1,0 +1,13 @@
+## .NET
+bin/
+obj/
+*.user
+.vs/
+
+## Uploaded files (keep folder, ignore contents)
+wwwroot/images/employees/*
+!wwwroot/images/employees/.gitkeep
+
+## OS
+.DS_Store
+Thumbs.db

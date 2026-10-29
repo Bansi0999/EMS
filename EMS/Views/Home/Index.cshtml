@@ -1,0 +1,198 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-xl-3 col-sm-6">
+        <div class="stat-card">
+            <div class="stat-icon bg-teal"><i class="bi bi-people-fill"></i></div>
+            <div>
+                <div class="stat-value">@Model.TotalEmployees</div>
+                <div class="stat-label">Total Employees</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6">
+        <div class="stat-card">
+            <div class="stat-icon bg-blue"><i class="bi bi-building"></i></div>
+            <div>
+                <div class="stat-value">@Model.TotalDepartments</div>
+                <div class="stat-label">Departments</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6">
+        <div class="stat-card">
+            <div class="stat-icon bg-amber"><i class="bi bi-briefcase-fill"></i></div>
+            <div>
+                <div class="stat-value">@Model.TotalDesignations</div>
+                <div class="stat-label">Designations</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6">
+        <div class="stat-card">
+            <div class="stat-icon bg-green"><i class="bi bi-cash-stack"></i></div>
+            <div>
+                <div class="stat-value">@Model.TotalMonthlySalary.ToString("C0")</div>
+                <div class="stat-label">Monthly Payroll</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-xl-3 col-sm-6">
+        <div class="stat-card">
+            <div class="stat-icon bg-amber"><i class="bi bi-calendar-check"></i></div>
+            <div><div class="stat-value">@Model.PendingLeaveRequests</div><div class="stat-label">Pending Leaves</div></div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6">
+        <div class="stat-card">
+            <div class="stat-icon bg-blue"><i class="bi bi-bar-chart-steps"></i></div>
+            <div><div class="stat-value">@Model.PendingLevelRequests</div><div class="stat-label">Pending Levels</div></div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-sm-12">
+        <div class="content-card h-100 d-flex align-items-center justify-content-between">
+            <div><h6 class="mb-1">Quick approvals</h6><p class="text-muted mb-0 small">Review employee leave and level requests.</p></div>
+            <div class="d-flex gap-2"><a asp-controller="Leave" asp-action="Index" class="btn btn-sm btn-outline-primary">Leaves</a><a asp-controller="Level" asp-action="Index" class="btn btn-sm btn-outline-primary">Levels</a></div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-lg-7">
+        <div class="content-card h-100">
+            <h5 class="section-title">Employees by Department</h5>
+            <canvas id="deptChart" height="220"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="content-card h-100">
+            <h5 class="section-title">Employee Status</h5>
+            <canvas id="statusChart" height="220"></canvas>
+            <div class="d-flex justify-content-around mt-3">
+                <div class="text-center">
+                    <span class="badge-status badge-active">Active</span>
+                    <div class="stat-value mt-2" style="font-size:20px;">@Model.ActiveEmployees</div>
+                </div>
+                <div class="text-center">
+                    <span class="badge-status badge-inactive">Inactive</span>
+                    <div class="stat-value mt-2" style="font-size:20px;">@Model.InactiveEmployees</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-card">
+    <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+        <h5 class="mb-0 fw-semibold">Recently Added Employees</h5>
+        <a asp-controller="Employee" asp-action="Index" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Code</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.RecentEmployees.Any())
+                {
+                    <tr><td colspan="5" class="text-center text-muted py-4">No employees added yet.</td></tr>
+                }
+                else
+                {
+                    @foreach (var emp in Model.RecentEmployees)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    @if (!string.IsNullOrEmpty(emp.PhotoPath))
+                                    {
+                                        <img src="@emp.PhotoPath" class="avatar-sm" alt="@emp.FullName" />
+                                    }
+                                    else
+                                    {
+                                        <div class="avatar-placeholder">@emp.FirstName.Substring(0,1)@emp.LastName.Substring(0,1)</div>
+                                    }
+                                    <div>
+                                        <div class="fw-semibold">@emp.FullName</div>
+                                        <div class="text-muted small">@emp.Email</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>@emp.EmployeeCode</td>
+                            <td><span class="badge-dept">@emp.Department?.DepartmentName</span></td>
+                            <td>@emp.Designation?.Title</td>
+                            <td>
+                                @if (emp.IsActive)
+                                {
+                                    <span class="badge-status badge-active">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-status badge-inactive">Inactive</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script>
+        const deptCtx = document.getElementById('deptChart');
+        new Chart(deptCtx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.DepartmentNames)),
+                datasets: [{
+                    label: 'Employees',
+                    data: @Html.Raw(Json.Serialize(Model.DepartmentEmployeeCounts)),
+                    backgroundColor: '#0D9488',
+                    borderRadius: 8,
+                    maxBarThickness: 46
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#F0F2F6' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        const statusCtx = document.getElementById('statusChart');
+        new Chart(statusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Active', 'Inactive'],
+                datasets: [{
+                    data: [@Model.ActiveEmployees, @Model.InactiveEmployees],
+                    backgroundColor: ['#0D9488', '#DC2626'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '70%',
+                plugins: { legend: { display: false } }
+            }
+        });
+    </script>
+}
